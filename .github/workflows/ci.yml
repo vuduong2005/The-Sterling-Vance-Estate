@@ -6,10 +6,10 @@ on:
   pull_request:  
     branches: [ main ]  
 
-jobs:  
-  build-and-test:  
-    name: Build & Test  
-    runs-on: ubuntu-latest  
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
 
     services:
       db:
@@ -25,26 +25,37 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    steps:  
-      - name: Checkout code  
-        uses: actions/checkout@v3  
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js  
-        uses: actions/setup-node@v3  
-        with:  
-          node-version: '18'  
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
           cache-dependency-path: backend/package-lock.json
-          cache: 'npm' 
+          cache: 'npm'
 
-      - name: Install dependencies  
-        run: npm install  
-        working-directory: ./backend 
-
-      - name: Run tests  
-        run: npm test  
+      - name: Install dependencies
+        run: npm install
         working-directory: ./backend
-        env:  
-          DB_HOST: localhost  
-          DB_USER: myuser  
-          DB_PASSWORD: mypass  
+
+      # ADD THIS STEP - Initialize the database
+      - name: Initialize database schema
+        run: |
+          PGPASSWORD=mypass psql -h localhost -U myuser -d mydatabase -c "
+          CREATE TABLE IF NOT EXISTS todos (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            completed BOOLEAN DEFAULT false,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );"
+
+      - name: Run tests
+        run: npm test
+        working-directory: ./backend
+        env:
+          DB_HOST: localhost
+          DB_USER: myuser
+          DB_PASSWORD: mypass
           DB_NAME: mydatabase
