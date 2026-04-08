@@ -25,6 +25,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -40,7 +41,6 @@ jobs:
         run: npm install
         working-directory: ./backend
 
-      # ADD THIS STEP - Initialize the database
       - name: Initialize database schema
         run: |
           PGPASSWORD=mypass psql -h localhost -U myuser -d mydatabase -c "
@@ -59,3 +59,19 @@ jobs:
           DB_USER: myuser
           DB_PASSWORD: mypass
           DB_NAME: mydatabase
+
+      # --- PART C: DOCKER HUB DEPLOYMENT ---
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend 
+          push: true
+          # Tags the image with your Docker Hub username and "latest"
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devops-project:latest
