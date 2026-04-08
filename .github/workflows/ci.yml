@@ -11,10 +11,10 @@ jobs:
     name: Build & Test  
     runs-on: ubuntu-latest  
 
-    # This starts a Postgres database *for this job* services:
     services:  
       db:  
         image: postgres:14-alpine  
+
         env:  
           POSTGRES_USER: myuser  
           POSTGRES_PASSWORD: mypass
@@ -36,9 +36,11 @@ jobs:
 
       - name: Install dependencies  
         run: npm install  
+        working-directory: ./backend 
 
       - name: Run tests  
         run: npm test  
+        working-directory: ./backend
         env:  
           DB_HOST: localhost  
           DB_USER: myuser  
