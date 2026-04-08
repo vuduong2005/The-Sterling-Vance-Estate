@@ -11,18 +11,20 @@ jobs:
     name: Build & Test  
     runs-on: ubuntu-latest  
 
-    services:  
-      db:  
-        image: postgres:14-alpine  
-
-        env:  
-          POSTGRES_USER: myuser  
+    services:
+      db:
+        image: postgres:14-alpine
+        env: 
+          POSTGRES_USER: myuser
           POSTGRES_PASSWORD: mypass
-          POSTGRES_DB: mydatabase  
-        ports:  
-          - 5432:5432  
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5 
-
+          POSTGRES_DB: mydatabase
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:  
       - name: Checkout code  
         uses: actions/checkout@v3  
