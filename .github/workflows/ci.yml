@@ -74,4 +74,4 @@ jobs:
           context: ./backend 
           push: true
           # Tags the image with your Docker Hub username and "latest"
-          tags: squarzy/devops-project:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/devops-project:latest
