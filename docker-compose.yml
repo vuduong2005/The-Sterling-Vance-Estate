@@ -10,7 +10,7 @@ services:
       backend:
         condition: service_healthy
     environment:
-      - REACT_APP_API_URL=http://103.1.236.26:8101
+      -  REACT_APP_API_URL=http://103.1.236.26:8101
 
   # 2. Backend service
   backend:
