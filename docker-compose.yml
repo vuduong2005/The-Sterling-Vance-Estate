@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  # 1. Frontend service
   frontend:
-    build: ./frontend
-    ports:
-      - "3101:3000"
-    depends_on:
-      backend:
-        condition: service_healthy
-    environment:
-      -  REACT_APP_API_URL=http://103.1.236.26:8101
+      build:
+        context: ./frontend
+        args:
+          - REACT_APP_API_URL=http://103.1.236.26:8101
+      ports:
+        - "3101:3000"
+      depends_on:
+        backend:
+          condition: service_healthy
 
   # 2. Backend service
   backend:
